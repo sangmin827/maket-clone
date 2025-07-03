@@ -1,0 +1,56 @@
+@import 'reset.css';
+@import 'header.css';
+@import 'main.css';
+@import 'footer.css';
+
+body {
+  @font-face {
+    font-family: 'YiSunShinDotumM';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/YiSunShinDotumM.woff')
+      format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+}
+
+.media-info-msg_max {
+  position: fixed;
+  padding-top: 100px;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 1000vw;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  font-weight: bold;
+  background-color: coral;
+  color: white;
+}
+
+.media-info-msg_min {
+  position: fixed;
+  padding-top: 100px;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 1000vw;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  font-weight: bold;
+  background-color: coral;
+  color: white;
+}
+
+@media screen and (max-width: 450px) {
+  .media-info-msg_max {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 360px) {
+  .media-info-msg_min {
+    display: none;
+  }
+}

@@ -1,0 +1,68 @@
+main {
+  padding: 15px 0 59px 0;
+}
+
+:root {
+  --button-primary: rgb(254, 111, 15);
+  --button-hover: rgb(255, 153, 19);
+}
+
+.item-list {
+  display: flex;
+  align-items: center;
+  margin-left: 30px;
+  margin-right: 30px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 15px 0 10px 0;
+}
+
+.item-list__img img {
+  width: 110px;
+  height: 110px;
+
+  border-radius: 10px;
+}
+
+.item-list__img {
+  margin-right: 20px;
+}
+
+.item-list__info div {
+  margin-top: 10px;
+}
+
+.item-list__info {
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+}
+
+.item-list__info-meta {
+  font-size: smaller;
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.item-list__info-price {
+  font-weight: bold;
+}
+
+.right_btn {
+  cursor: pointer;
+  position: fixed;
+  bottom: 120px;
+  right: 25px;
+  background-color: var(--button-primary);
+  color: white;
+  font-size: 15px;
+  padding: 15px 18px 15px 18px;
+  border-radius: 30px;
+  font-weight: bold;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  transition: all 0.1s ease-in-out;
+}
+
+.right_btn:hover {
+  background-color: var(--button-hover);
+}
