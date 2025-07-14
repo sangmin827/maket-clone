@@ -1,5 +1,5 @@
 main {
-  padding: 15px 0 59px 0;
+  padding: 15px 0 95px 0;
 }
 
 :root {
@@ -19,6 +19,7 @@ main {
 .item-list__img img {
   width: 110px;
   height: 110px;
+  overflow: hidden;
 
   border-radius: 10px;
 }
@@ -48,7 +49,7 @@ main {
   font-weight: bold;
 }
 
-.right_btn {
+.write_btn {
   cursor: pointer;
   position: fixed;
   bottom: 120px;
@@ -61,8 +62,9 @@ main {
   font-weight: bold;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   transition: all 0.1s ease-in-out;
+  text-decoration: none;
 }
 
-.right_btn:hover {
+.write_btn:hover {
   background-color: var(--button-hover);
 }
