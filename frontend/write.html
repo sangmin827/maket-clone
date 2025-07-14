@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>글쓰기</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>상품 등록</h1>
+    </header>
+
+    <main>
+      <form action="/items" method="post">
+        <div>
+          <label for="image">이미지</label>
+          <input
+            type="file"
+            id="image"
+            name="image"
+            accept="image/*"
+            required
+          />
+        </div>
+        <div>
+          <label for="title">제목</label>
+          <input type="text" id="title" name="title" required />
+        </div>
+
+        <div>
+          <label for="price">가격</label>
+          <input type="number" id="price" name="price" required />
+        </div>
+
+        <div>
+          <label for="description">설명</label>
+          <input type="text" id="title" name="title" required />
+        </div>
+
+        <div>
+          <label for="place">지역</label>
+          <input type="text" id="place" name="place" required />
+        </div>
+
+        <button type="submit">등록하기</button>
+      </form>
+    </main>
+
+    <script src="write.js"></script>
+  </body>
+</html>
