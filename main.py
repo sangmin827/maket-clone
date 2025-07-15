@@ -1,7 +1,9 @@
-from fastapi import FastAPI,UploadFile,Form,Response
+from fastapi import FastAPI,UploadFile,Form,Response,Depends
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from fastapi.staticfiles import StaticFiles
+from fastapi_login import LoginManager
+from fastapi_login.exceptions import InvalidCredentialsException
 from typing import Annotated
 import sqlite3
 
@@ -10,17 +12,61 @@ cur = con.cursor()
 
 cur.execute(f"""
             CREATE TABLE IF NOT EXISTS items (
-	            id INTEGER PRIMARY KEY,
-	            title TEXT NOT NULL,
-	            image BLOB,
-	            price INTEGER NOT NULL,
-            	description TEXT,
-	            place TEXT NOT NULL,
-            	insertAt INTEGER NOT NULL
+	id INTEGER PRIMARY KEY,
+	title TEXT NOT NULL,
+	image BLOB,
+	price INTEGER NOT NULL,
+  description TEXT,
+	place TEXT NOT NULL,
+  insertAt INTEGER NOT NULL
             );
             """)
 
 app = FastAPI()
+
+SERCRET = "super-coding"
+manager = LoginManager(SERCRET,"/login")
+
+@manager.user_loader()
+
+def query_user(data):
+    where_statement = f'id="{data}"'
+    if isinstance(data, dict):
+        where_statement = f'''id="{data['id']}"'''
+
+    con.row_factory = sqlite3.Row
+    cur = con.cursor()
+    user = cur.execute(f"""
+        SELECT * FROM users WHERE {where_statement}
+    """).fetchone()
+    return user
+
+@app.post("/login")
+def login(id:Annotated[str,Form()],
+            password:Annotated[str,Form()]):
+  user = query_user(id)
+  if not user: 
+    raise InvalidCredentialsException
+  elif password != user['password']:
+    raise InvalidCredentialsException
+  
+  access_token = manager.create_access_token(data={
+      'sub': user['id']
+  })
+  return {'access_token': access_token}
+  
+
+@app.post('/signup')
+def signup(id:Annotated[str,Form()],
+            password:Annotated[str,Form()],
+            name:Annotated[str,Form()],
+            email:Annotated[str,Form()]):
+  cur.execute(f"""
+              INSERT INTO users(id,name,email,password)
+              VALUES ('{id}','{name}','{email}','{password}')
+              """)
+  con.commit()
+  return "200"
 
 #app.monut 위쪽에 작성해야됨 밑에 작성시 app.monut 위쪽에만 처리하기에 걸림
 
@@ -30,7 +76,9 @@ async def create_item(image:UploadFile,
                 price:Annotated[int,Form()],
                 description:Annotated[str,Form()],
                 place:Annotated[str,Form()],
-                insertAt:Annotated[int,Form()]):
+                insertAt:Annotated[int,Form()],
+                user=Depends(manager)
+                ):
   image_bytes = await image.read()
   cur.execute(f"""
               INSERT INTO items(title, image, price, description, place, insertAt)
@@ -40,13 +88,13 @@ async def create_item(image:UploadFile,
   return '200'
 
 @app.get("/items")
-async def get_items():
+async def get_items(user=Depends(manager)):
   #컬럼명도 같이 가져옴 >> 지금은 각 값들이 어떤것인지 같이 보내주는것 - array형식
   con.row_factory = sqlite3.Row
   cur = con.cursor()
   rows = cur.execute(f"""
                      SELECT * FROM items;
-                     """).fetchall()
+                      """).fetchall()
   return JSONResponse(jsonable_encoder(dict(row) for row in rows))
 
 @app.get('/images/{item_id}')
@@ -58,16 +106,6 @@ async def get_image(item_id):
   
   return Response(content=bytes.fromhex(image_bytes), media_type='image/*')
 
-@app.post('/signup')
-def signup(id:Annotated[str,Form()],
-           password:Annotated[str,Form()],
-           name:Annotated[str,Form()],
-           email:Annotated[str,Form()]):
-  cur.execute(f"""
-              INSERT INTO users(id,name,email,password)
-              VALUES ('{id}','{name}','{email}','{password}')
-              """)
-  con.commit()
-  return "200"
+
 
 app.mount("/",StaticFiles(directory="frontend", html=True), name="frontend")
